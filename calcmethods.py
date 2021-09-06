@@ -1,9 +1,13 @@
+# calcmethods.py
 from urllib.request import urlopen as uReq
 from bs4 import BeautifulSoup as soup
 from selenium import webdriver
 
 def calc_genre_avg(genre, username):
 
+    from urllib.request import urlopen as uReq
+    from bs4 import BeautifulSoup as soup
+    from selenium import webdriver
     genrePage ="https://letterboxd.com/" + username + "/films/genre/" + genre +"/"
 
     #set up browser
