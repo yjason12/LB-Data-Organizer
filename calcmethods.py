@@ -5,44 +5,33 @@ from selenium import webdriver
 
 def calc_genre_avg(genre, username):
 
-    from urllib.request import urlopen as uReq
-    from bs4 import BeautifulSoup as soup
-    from selenium import webdriver
     genrePage ="https://letterboxd.com/" + username + "/films/genre/" + genre +"/"
 
-    #set up browser
+    #set up browser and open page
     driver = webdriver.Chrome(executable_path="C:/Users/0yong/Downloads/chromedriver_win32/chromedriver.exe")
-    driver.get(filmsHomePage)
-    page = driver.page_source
-    page_soup = soup(page, "html.parser")
-
-    #open page
-
     driver.get(genrePage)
     page = driver.page_source
     page_soup = soup(page, "html.parser")
 
-    #get pagecount
-    listOfPageCount = page_soup.findAll("li", {"class":"pageinate-page"})
-    lineWithPageCount = listOfPageCount[len(listOfPageCount) -1]
-    lastPage = lineWithPageCount.a
-    numPages = 0;
-    i = 0
-    test = str(lastPage)
-    while (test[22 + len(username) + i] != "/"):
-        numPages = numPages * 10
-        numPages = numPages + int(test[22 + len(username) + i])
-        i+=1
+
+    #determine page count
+    listOfPageCount = page_soup.findAll("li", {"class":"paginate-page"})
+    if(len(listOfPageCount) == 0):
+        lastPage = 1
+    else:
+        lineWithPageCount = listOfPageCount[len(listOfPageCount) -1]
+        lastPage = lineWithPageCount.a
+        splitList = str(lastPage).split("/")
+        lastPage = splitList[len(splitList) - 3]
 
 
     #Loop through each page and determine average
     numMovies = 0
     totalRating = 0
     pageLink = genrePage + "page/"
-    for i in range(1, numPages + 1, 1):
+    for i in range(1, int(lastPage) + 1, 1):
         newLink = pageLink + str(i)
         driver.get(newLink)
-
 
         page = driver.page_source
         page_soup = soup(page, "html.parser")
@@ -51,19 +40,20 @@ def calc_genre_avg(genre, username):
         for container in containers:
             ratingTag = container.span
 
-            if ratingTag is None:
+            if ratingTag is None: #no rating
                 continue
-            elif ((str(ratingTag))[13] == "l"):
+            elif ((str(ratingTag))[13] == "l"): #no rating
                 continue
 
-            if((str(ratingTag))[41] == "0"):
+            if((str(ratingTag))[41] == "0"): #rating is a 10
                 numMovies+=1
                 totalRating+=10
                 continue
 
             totalRating+=int((str(ratingTag))[40])
-
             numMovies+=1
 
     driver.close()
+    print("total Rating " + str(totalRating))
+    print("numMovies " + str(numMovies))
     return totalRating/numMovies
