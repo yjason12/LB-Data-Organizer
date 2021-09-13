@@ -42,16 +42,16 @@ def calc_genre_avg(genre, username):
 
             if ratingTag is None: #no rating
                 continue
-            elif ((str(ratingTag))[13] == "l"): #no rating
+
+            tagArr = str(ratingTag).split("\"")
+
+            if(len(tagArr) != 3): #no rating
                 continue
 
-            if((str(ratingTag))[41] == "0"): #rating is a 10
-                numMovies+=1
-                totalRating+=10
-                continue
-
-            totalRating+=int((str(ratingTag))[40])
+            tagArr = tagArr[1] #get rating from tag
+            tagArr = tagArr.split("-")
             numMovies+=1
+            totalRating+=int(tagArr[3])
 
     driver.close()
     print("total Rating " + str(totalRating))
