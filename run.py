@@ -1,6 +1,6 @@
 import calcmethods
 
-username = "yongjaeson"
+username =  "yongjaeson"
 genre = "horror"
 dramaAvg = calcmethods.calc_genre_avg(genre, username)
 
