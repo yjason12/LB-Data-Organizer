@@ -3,7 +3,27 @@ from urllib.request import urlopen as uReq
 from bs4 import BeautifulSoup as soup
 from selenium import webdriver
 
-def calc_genre_avg(genre, username):
+def fav_genre(username):
+    page ="https://letterboxd.com/" + username + "/films"
+
+    genres = ["war", "adventure", "animation", "comedy", "crime",
+            "documentary", "drama", "family", "fantasy", "history",
+            "horror", "music", "mystery", "romance", "science-fiction",
+            "thriller", "tv-movie", "war", "western"]
+
+    genreAvgs = {}
+
+    for genre in genres:
+        genreAvgs[genre] = genre_avg(genre,username)
+
+    sortedAvgs = sorted(genreAvgs.items(), key = lambda kv: kv[1])
+    sortedAvgs = dict(sortedAvgs).reverse()
+    for genre in sortedAvgs:
+        print("average rating for " + genre + ": " + str(sortedAvgs[genre]))
+
+
+
+def genre_avg(genre, username):
 
     genrePage ="https://letterboxd.com/" + username + "/films/genre/" + genre +"/"
 
@@ -54,6 +74,8 @@ def calc_genre_avg(genre, username):
             totalRating+=int(tagArr[3])
 
     driver.close()
-    print("total Rating " + str(totalRating))
-    print("numMovies " + str(numMovies))
+    #print("total Rating " + str(totalRating))
+    #print("numMovies " + str(numMovies))
+    if(numMovies == 0):
+        return 0
     return totalRating/numMovies
