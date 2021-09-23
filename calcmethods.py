@@ -3,10 +3,11 @@ from urllib.request import urlopen as uReq
 from bs4 import BeautifulSoup as soup
 from selenium import webdriver
 
-def fav_genre(username):
+
+def fav_genre(username, driver):
     page ="https://letterboxd.com/" + username + "/films"
 
-    genres = ["war", "adventure", "animation", "comedy", "crime",
+    genres = ["action", "adventure", "animation", "comedy", "crime",
             "documentary", "drama", "family", "fantasy", "history",
             "horror", "music", "mystery", "romance", "science-fiction",
             "thriller", "tv-movie", "war", "western"]
@@ -14,21 +15,22 @@ def fav_genre(username):
     genreAvgs = {}
 
     for genre in genres:
-        genreAvgs[genre] = genre_avg(genre,username)
+        genreAvgs[genre] = genre_avg(genre, username, driver)
 
     sortedAvgs = sorted(genreAvgs.items(), key = lambda kv: kv[1])
-    sortedAvgs = dict(sortedAvgs).reverse()
+    sortedAvgs = dict(sortedAvgs)
     for genre in sortedAvgs:
         print("average rating for " + genre + ": " + str(sortedAvgs[genre]))
 
+    return sortedAvgs
 
 
-def genre_avg(genre, username):
+
+def genre_avg(genre, username, driver):
 
     genrePage ="https://letterboxd.com/" + username + "/films/genre/" + genre +"/"
 
     #set up browser and open page
-    driver = webdriver.Chrome(executable_path="C:/Users/0yong/Downloads/chromedriver_win32/chromedriver.exe")
     driver.get(genrePage)
     page = driver.page_source
     page_soup = soup(page, "html.parser")
@@ -73,7 +75,6 @@ def genre_avg(genre, username):
             numMovies+=1
             totalRating+=int(tagArr[3])
 
-    driver.close()
     #print("total Rating " + str(totalRating))
     #print("numMovies " + str(numMovies))
     if(numMovies == 0):
