@@ -1,4 +1,2 @@
 # LB-Data-Organizer
-Program to organize and analyze letterboxd data
-
-Using python to webscrape letterboxd
+python script to webscrape letterboxd and compute stats
