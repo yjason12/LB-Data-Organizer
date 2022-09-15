@@ -21,6 +21,7 @@ for genre in sortedAvgs:
     genres.append(genre)
     avgs.append(round(sortedAvgs[genre], 2))
 
+# set up graph
 ypos = np.arange(len(genres))
 
 plt.xticks(ypos, genres)
