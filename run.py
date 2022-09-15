@@ -8,11 +8,14 @@ import numpy as np
 
 driver = webdriver.Chrome(executable_path="C:/Users/0yong/Downloads/chromedriver_win32/chromedriver.exe")
 
-username =  "yongjaeson"
+username = input("Enter Letterboxd Username ")
+
+# Get user's list of genres sorted by average rating
 sortedAvgs = calcmethods.fav_genre(username, driver)
 
 genres = []
 avgs = []
+
 
 for genre in sortedAvgs:
     genres.append(genre)
