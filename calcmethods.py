@@ -3,7 +3,7 @@ from urllib.request import urlopen as uReq
 from bs4 import BeautifulSoup as soup
 from selenium import webdriver
 
-
+# Given a user and a webdriver, return a sorted list of genres by average rating
 def fav_genre(username, driver):
     page ="https://letterboxd.com/" + username + "/films"
 
@@ -25,18 +25,18 @@ def fav_genre(username, driver):
     return sortedAvgs
 
 
-
+# Given a genre and user, parse through user data and return the user's average rating for the genre
 def genre_avg(genre, username, driver):
 
     genrePage ="https://letterboxd.com/" + username + "/films/genre/" + genre +"/"
 
-    #set up browser and open page
+    # set up browser and open page
     driver.get(genrePage)
     page = driver.page_source
     page_soup = soup(page, "html.parser")
 
 
-    #determine page count
+    # determine page count
     listOfPageCount = page_soup.findAll("li", {"class":"paginate-page"})
     if(len(listOfPageCount) == 0):
         lastPage = 1
@@ -47,7 +47,7 @@ def genre_avg(genre, username, driver):
         lastPage = splitList[len(splitList) - 3]
 
 
-    #Loop through each page and determine average
+    # Loop through each page and determine average
     numMovies = 0
     totalRating = 0
     pageLink = genrePage + "page/"
@@ -59,10 +59,13 @@ def genre_avg(genre, username, driver):
         page_soup = soup(page, "html.parser")
 
         containers = page_soup.findAll("p",{"class":"poster-viewingdata -rated-and-liked"})
+        # Iterate through every movie entry in page
         for container in containers:
+            
+            # Retrieve rating from movie entry
             ratingTag = container.span
 
-            if ratingTag is None: #no rating
+            if ratingTag is None: # no rating
                 continue
 
             tagArr = str(ratingTag).split("\"")
